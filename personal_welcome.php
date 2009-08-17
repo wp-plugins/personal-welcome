@@ -130,6 +130,7 @@ function personalwelcome()
 					<th>' . __("Full name") . '</th>
 					<th>' . __("Display name") . '</th>
 					<th>' . __("Email") . '</th>
+					<th>' . __("Blogs") . '</th>
 					<th>' . __("Date registered") . '</th>
 					';
 					if (isset($_POST["personalwelcome_q"]) && trim($_POST["personalwelcome_q"]) != "")
@@ -145,12 +146,34 @@ function personalwelcome()
 				';
 			foreach($users as $user)
 			{
+				$blogs = get_blogs_of_user($user->id);
 				echo '
 				<tr>
 					<td><a href="wpmu-admin.php?page=personalwelcome&amp;send=' . $user->id . '">' . $user->user_login . '</a></td>
 					<td>' . $user->user_nicename . '</td>
 					<td>' . $user->display_name . '</td>
 					<td><a href="mailto:' . $user->user_email . '">' . $user->user_email . '</a></td>
+					<td>';
+					
+					if ($blogs && is_array($blogs) && count($blogs) > 0)
+					{
+						echo '
+						<ul>
+						';
+						foreach($blogs as $blog)
+						{
+							echo '
+							<li><a href="http://' . $blog->domain . $blog->path . '">' . $blog->blogname . '</a></li>
+							';
+						}
+						echo '
+						</ul>
+						';
+					} else {
+						echo __("No blogs");
+					}
+				echo '
+					</td>
 					<td>' . date("F j, Y, g:i a", $user->user_registered) . '</td>
 					';
 					if (isset($_POST["personalwelcome_q"]) && trim($_POST["personalwelcome_q"]) != "")

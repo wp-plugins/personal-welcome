@@ -3,8 +3,8 @@ Contributors: mrwiblog
 Donate link: http://www.stillbreathing.co.uk/donate/
 Tags: wordpress mu, personal, welcome, email, message, greet
 Requires at least: 2.7
-Tested up to: 2.7.1
-Stable tag: 0.1
+Tested up to: 2.8.1
+Stable tag: 0.2
 
 Personal Welcome is a Wordpress MU plugin that allows site administrators to create and send personalised welcome messages to new users.
 
@@ -35,3 +35,8 @@ To scratch my own itch when developing [BeatsBase.com](http://beatsbase.com "Fre
 
 1. The list of new users to welcome and template admin
 2. The form to edit and send the welcome message
+
+== Changelog ==
+
+= 0.2 =
+* Added list of each users blogs to the main table
