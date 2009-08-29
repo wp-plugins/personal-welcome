@@ -42,5 +42,6 @@ To scratch my own itch when developing [BeatsBase.com](http://beatsbase.com "Fre
 
 = 0.3 =
 * Add ability to set user or user and blogs as spam
+
 = 0.2 =
 * Added list of each users blogs to the main table

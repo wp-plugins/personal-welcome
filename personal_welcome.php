@@ -55,9 +55,9 @@ function personalwelcome()
 	{
 		$sql = "update ".$wpdb->users." set spam = 1 where user_email = '" . $wpdb->escape(str_replace(" ", "+", urldecode($_GET["spamuser"]))) . "';";
 		if ($wpdb->query($sql)) {
-			echo '<div class="updated"><p>' . __("User set as spam") . '.</p></div>';
+			echo '<div class="updated"><p>' . __("User set as spam") . '</p></div>';
 		} else {
-			echo '<div class="updated"><p>' . __("User could not be set as spam") . '.</p></div>';
+			echo '<div class="updated"><p>' . __("User could not be set as spam") . '</p></div>';
 		}
 	}
 	
@@ -68,9 +68,9 @@ function personalwelcome()
 		{
 			$sql = "update ".$wpdb->blogs." set spam = 1 where blog_id = '" . $wpdb->escape($blogid) . "';";
 			if ($wpdb->query($sql)) {
-				echo '<div class="updated"><p>Blog ID ' . $blogid . ': ' . __("Set as spam") . '.</p></div>';
+				echo '<div class="updated"><p>Blog ID ' . $blogid . ': ' . __("Set as spam") . '</p></div>';
 			} else {
-				echo '<div class="updated"><p>Blog ID ' . $blogid . ': ' . __("Could not be set as spam") . '.</p></div>';
+				echo '<div class="updated"><p>Blog ID ' . $blogid . ': ' . __("Could not be set as spam") . '</p></div>';
 			}
 		}
 	}
