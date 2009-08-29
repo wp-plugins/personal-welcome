@@ -51,6 +51,30 @@ function personalwelcome()
 	<div id="personalwelcome" class="wrap">
 	';
 	
+	if (isset($_GET["spamuser"]) && $_GET["spamuser"] != "")
+	{
+		$sql = "update ".$wpdb->users." set spam = 1 where user_email = '" . $wpdb->escape(str_replace(" ", "+", urldecode($_GET["spamuser"]))) . "';";
+		if ($wpdb->query($sql)) {
+			echo '<div class="updated"><p>' . __("User set as spam") . '.</p></div>';
+		} else {
+			echo '<div class="updated"><p>' . __("User could not be set as spam") . '.</p></div>';
+		}
+	}
+	
+	if (isset($_GET["spamblogs"]) && $_GET["spamblogs"] != "")
+	{
+		$blogs = explode(",", $_GET["spamblogs"]);
+		foreach ($blogs as $blogid)
+		{
+			$sql = "update ".$wpdb->blogs." set spam = 1 where blog_id = '" . $wpdb->escape($blogid) . "';";
+			if ($wpdb->query($sql)) {
+				echo '<div class="updated"><p>Blog ID ' . $blogid . ': ' . __("Set as spam") . '.</p></div>';
+			} else {
+				echo '<div class="updated"><p>Blog ID ' . $blogid . ': ' . __("Could not be set as spam") . '.</p></div>';
+			}
+		}
+	}
+	
 	if (!isset($_GET["send"]) || $_GET["send"] == "")
 	{
 
@@ -92,6 +116,7 @@ function personalwelcome()
 								from " . $wpdb->users . " u 
 								left outer join wp_usermeta m on m.user_id = u.id and m.meta_key = 'personal_welcome_sent' 
 								where IFNULL(m.meta_value, '') = '' 
+								and u.spam = 0
 								order by u.user_registered desc limit %d, 25;", 
 								$start);
 							
@@ -132,6 +157,7 @@ function personalwelcome()
 					<th>' . __("Email") . '</th>
 					<th>' . __("Blogs") . '</th>
 					<th>' . __("Date registered") . '</th>
+					<th>' . __("Spam") . '</th>
 					';
 					if (isset($_POST["personalwelcome_q"]) && trim($_POST["personalwelcome_q"]) != "")
 					{
@@ -146,6 +172,7 @@ function personalwelcome()
 				';
 			foreach($users as $user)
 			{
+				$blogids = '';
 				$blogs = get_blogs_of_user($user->id);
 				echo '
 				<tr>
@@ -162,8 +189,9 @@ function personalwelcome()
 						';
 						foreach($blogs as $blog)
 						{
+							$blogids .= $blog->userblog_id . ',';
 							echo '
-							<li><a href="http://' . $blog->domain . $blog->path . '">' . $blog->blogname . '</a></li>
+							<li><a href="http://' . $blog->domain . $blog->path . '">' . stripslashes($blog->blogname) . '</a></li>
 							';
 						}
 						echo '
@@ -182,7 +210,14 @@ function personalwelcome()
 						<td>' . $user->personalinvite . '</td>
 						';
 					}
+					$blogids = trim($blogids, ',');
 					echo'
+					<td>
+						<ul>
+							<li><a href="wpmu-admin.php?page=personalwelcome&amp;spamuser=' . urlencode($user->user_email) . '">'.__("Spam user").'</a></li>
+							<li><a href="wpmu-admin.php?page=personalwelcome&amp;spamuser=' . urlencode($user->user_email) . '&amp;spamblogs='.$blogids.'">'.__("Spam user and blogs").'</li>
+						</ul>
+					</td>
 				</tr>
 				';
 			}
