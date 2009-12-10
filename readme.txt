@@ -1,7 +1,7 @@
 === Personal Welcome ===
 Contributors: mrwiblog
 Donate link: http://www.stillbreathing.co.uk/donate/
-Tags: wordpress mu, personal, welcome, email, message, greet
+Tags: wordpress mu, buddypress, personal, welcome, email, message, greet
 Requires at least: 2.7
 Tested up to: 2.8.1
 Stable tag: 0.3
