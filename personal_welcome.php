@@ -1,8 +1,8 @@
 <?php
 /*
 Plugin Name: Personal Welcome
-Plugin URI: http://www.stillbreathing.co.uk/projects/mu-personal-welcome/
-Description: A plugin for Wordpress MU which allows you to create and send personal welcome messages to new users
+Plugin URI: http://www.stillbreathing.co.uk/wordpress/personal-welcome/
+Description: A plugin for Wordpress MU/MultiSite/BuddyPress which allows you to create and send personal welcome messages to new users
 Version: 0.1
 Author: Chris Taylor
 Author URI: http://www.stillbreathing.co.uk
