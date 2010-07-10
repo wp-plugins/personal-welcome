@@ -3,7 +3,7 @@
 Plugin Name: Personal Welcome
 Plugin URI: http://www.stillbreathing.co.uk/wordpress/personal-welcome/
 Description: A plugin for Wordpress MU/MultiSite/BuddyPress which allows you to create and send personal welcome messages to new users
-Version: 0.3.2
+Version: 0.3.3
 Author: Chris Taylor
 Author URI: http://www.stillbreathing.co.uk
 */
@@ -80,12 +80,13 @@ function personalwelcome()
 		}
 	}
 	
+	$wpmums = "wpmu";
+	if (version_compare(get_bloginfo('version'), "3") >= 0)	{
+		$wpmums = "ms";
+	}
+	
 	if (!isset($_GET["send"]) || $_GET["send"] == "")
 	{
-		$wpmums = "wpmu";
-		if (version_compare(get_bloginfo('version'), "3") >= 0)	{
-			$wpmums = "ms";
-		}
 		
 		echo '
 		<h2>' . __("Personal welcomes") . '</h2>
@@ -477,9 +478,9 @@ function personalinvite_send($user)
 	global $current_user;
 	$headers = "MIME-Version: 1.0\n" .
 	"From: " . $current_user->user_email . "\n" .
-	"Content-Type: text/plain; charset=\"" . get_settings('blog_charset') . "\"\n";
+	"Content-Type: text/plain; charset=\"" . personalwelcome_get_option('blog_charset') . "\"\n";
 	wp_mail($user->user_email, stripslashes(trim($_POST["subject"])), stripslashes(trim($_POST["message"])), $headers);
-	update_usermeta($user->id, "personal_welcome_sent", "Sent by " . $current_user->user_email . " on " . date("F j, Y, g:i a"));
+	personalwelcome_update_user_meta($user->id, "personal_welcome_sent", "Sent by " . $current_user->user_email . " on " . date("F j, Y, g:i a"));
 }
 
 // set all users as sent
@@ -491,12 +492,36 @@ function personalinvite_set_all_as_sent()
 	$i = 0;
 	foreach($setusers as $u)
 	{
-		if (get_usermeta($u->id, "personal_welcome_sent") == "")
+		if (personalwelcome_get_user_meta($u->id, "personal_welcome_sent") == "")
 		{
-			update_usermeta($u->id, "personal_welcome_sent", __("Bulk set by") . " " . $current_user->user_email . " (" . date("F j, Y, g:i a") . ")");
+			personalwelcome_update_user_meta($u->id, "personal_welcome_sent", __("Bulk set by") . " " . $current_user->user_email . " (" . date("F j, Y, g:i a") . ")");
 			$i++;
 		}
 	}
 	return $i;
+}
+
+function personalwelcome_get_option($name) {
+	if (function_exists("get_option")) {
+		return get_option($name);
+	} else {
+		return get_settings($name);
+	}
+}
+
+function personalwelcome_get_user_meta($id, $meta) {
+	if (function_exists("get_user_meta")) {
+		return get_user_meta($id, $meta);
+	} else {
+		return get_usermeta($id, $meta);
+	}
+}
+
+function personalwelcome_update_user_meta($id, $meta, $value) {
+	if (function_exists("update_user_meta")) {
+		return update_user_meta($id, $meta, $value);
+	} else {
+		return update_usermeta($id, $meta, $value);
+	}
 }
 ?>

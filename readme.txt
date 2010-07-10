@@ -3,14 +3,14 @@ Contributors: mrwiblog
 Donate link: http://www.stillbreathing.co.uk/donate/
 Tags: wordpress mu, buddypress, personal, welcome, email, message, greet
 Requires at least: 2.7
-Tested up to: 3
-Stable tag: 0.3.2
+Tested up to: 3.0
+Stable tag: 0.3.3
 
 Personal Welcome is a Wordpress MU plugin that allows site administrators to create and send personalised welcome messages to new users.
 
 == Description ==
 
-Personal welcome is a Wordpress MU plugin that lists newly registered users, and allows site administrators to send them a personalised welcome message. The welcome messages are based on templates which you can write yourself (as many templates as you like). Once a message is sent that user won't appear again.
+Personal welcome is a Wordpress MU/MultiSite/BuddyPress plugin that lists newly registered users, and allows site administrators to send them a personalised welcome message. The welcome messages are based on templates which you can write yourself (as many templates as you like). Once a message is sent that user won't appear again.
 
 There are four extra management features:
 
@@ -40,7 +40,22 @@ To scratch my own itch when developing [BeatsBase.com](http://beatsbase.com "Fre
 
 == Changelog ==
 
-0.3.2 Compatibility with WP 3.0, updated styles
-0.3.1 Update plugin URI
-0.3 Add ability to set user or user and blogs as spam
-0.2 Added list of each users blogs to the main table
+= 0.3.3 =
+
+Fixed bug introduced in 0.3.2. Thanks to Jim from http://www.tripawds.com/ for reporting it.
+
+= 0.3.2 =
+
+Compatibility with WP 3.0, updated styles
+
+= 0.3.1 =
+
+Update plugin URI
+
+= 0.3 =
+
+Add ability to set user or user and blogs as spam
+
+= 0.2 =
+
+Added list of each users blogs to the main table
