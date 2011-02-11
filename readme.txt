@@ -4,13 +4,13 @@ Donate link: http://www.stillbreathing.co.uk/donate/
 Tags: wordpress mu, buddypress, personal, welcome, email, message, greet
 Requires at least: 2.7
 Tested up to: 3.0
-Stable tag: 0.3.3
+Stable tag: 0.3.4
 
-Personal Welcome is a Wordpress MU plugin that allows site administrators to create and send personalised welcome messages to new users.
+Personal Welcome is a Wordpress plugin that allows site administrators to create and send personalised welcome messages to new users.
 
 == Description ==
 
-Personal welcome is a Wordpress MU/MultiSite/BuddyPress plugin that lists newly registered users, and allows site administrators to send them a personalised welcome message. The welcome messages are based on templates which you can write yourself (as many templates as you like). Once a message is sent that user won't appear again.
+Personal welcome is a Wordpress/MultiSite/BuddyPress plugin that lists newly registered users, and allows site administrators to send them a personalised welcome message. The welcome messages are based on templates which you can write yourself (as many templates as you like). Once a message is sent that user won't appear again.
 
 There are four extra management features:
 
@@ -25,13 +25,13 @@ The plugin also makes use of the __() function to allow for easy translation.
 
 == Installation ==
 
-The plugin should be placed in your /wp-content/mu-plugins/ directory (*not* /wp-content/plugins/) and requires no activation.
+The plugin hould be installed from the WordPress plugin repository and activated. The menu item will then appear under "Super Admin" menu when using MultiSite, and under the "Users" menu when uing standard WordPress.
 
 == Frequently Asked Questions ==
 
 = Why did you write this plugin? =
 
-To scratch my own itch when developing [BeatsBase.com](http://beatsbase.com "Free mix hosting for DJs") and [Wibsite.com](http://wibsite.com "The worlds most popular Wibsite"). Hopefully this plugin helps other developers too.
+To scratch my own itch when developing [BeatsBase.co.uk](http://beatsbase.co.uk "Free mix hosting for DJs") and [Wibsite.com](http://wibsite.com "The worlds most popular Wibsite"). Hopefully this plugin helps other developers too.
 
 == Screenshots ==
 
@@ -39,6 +39,10 @@ To scratch my own itch when developing [BeatsBase.com](http://beatsbase.com "Fre
 2. The form to edit and send the welcome message
 
 == Changelog ==
+
+= 0.3.4 (2011/02/11) =
+
+Made the plugin compatible with standard WordPress (which can be used by BuddyPress)
 
 = 0.3.3 =
 

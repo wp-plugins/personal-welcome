@@ -2,8 +2,8 @@
 /*
 Plugin Name: Personal Welcome
 Plugin URI: http://www.stillbreathing.co.uk/wordpress/personal-welcome/
-Description: A plugin for Wordpress MU/MultiSite/BuddyPress which allows you to create and send personal welcome messages to new users
-Version: 0.3.3
+Description: A plugin for Wordpress/MultiSite/BuddyPress which allows you to create and send personal welcome messages to new users
+Version: 0.3.4
 Author: Chris Taylor
 Author URI: http://www.stillbreathing.co.uk
 */
@@ -35,12 +35,33 @@ width: 20%;
 function personalwelcome_add_admin()
 {
 	if (version_compare(get_bloginfo('version'), "3") >= 0)	{
-		if ( is_super_admin() ) {
+		if ( defined( 'WP_ALLOW_MULTISITE' ) && WP_ALLOW_MULTISITE && is_super_admin() ) {
 			add_submenu_page('ms-admin.php', __("Personal Welcomes"), __("Personal Welcomes"), 'edit_users', 'personalwelcome', 'personalwelcome');
+		} else {
+			if ( current_user_can( 'edit_users' ) ) {
+				add_submenu_page('users.php', __("Personal Welcomes"), __("Personal Welcomes"), 'edit_users', 'personalwelcome', 'personalwelcome');
+			}
 		}
 	} else {
 		if ( is_site_admin() ) {
 			add_submenu_page('wpmu-admin.php', __("Personal Welcomes"), __("Personal Welcomes"), 'edit_users', 'personalwelcome', 'personalwelcome');
+		}
+	}
+}
+
+// get the host page 
+function personalwelcome_host_page() {
+	if (version_compare(get_bloginfo('version'), "3") >= 0)	{
+		if ( defined( 'WP_ALLOW_MULTISITE' ) && WP_ALLOW_MULTISITE && is_super_admin() ) {
+			return 'ms-admin.php';
+		} else {
+			if ( current_user_can( 'edit_users' ) ) {
+				return 'ms-admin.php';
+			}
+		}
+	} else {
+		if ( is_site_admin() ) {
+			return 'users.php';
 		}
 	}
 }
@@ -80,18 +101,13 @@ function personalwelcome()
 		}
 	}
 	
-	$wpmums = "wpmu";
-	if (version_compare(get_bloginfo('version'), "3") >= 0)	{
-		$wpmums = "ms";
-	}
-	
 	if (!isset($_GET["send"]) || $_GET["send"] == "")
 	{
 		
 		echo '
 		<h2>' . __("Personal welcomes") . '</h2>
 		
-			<form action="' . $wpmums . '-admin.php?page=personalwelcome" method="post">
+			<form action="' . personalwelcome_host_page() . '?page=personalwelcome" method="post">
 			<p><label for="personalwelcome_q">' . __("Search for a user") . '</label>
 			<input type="text" name="personalwelcome_q" id="personalwelcome_q" /></p>
 			<p><label for="personalwelcome_s">' . __("Search") . '</label>
@@ -149,7 +165,7 @@ function personalwelcome()
 			} else {
 			
 				echo '
-				<form action="' . $wpmums . '-admin.php?page=personalwelcome" method="post">
+				<form action="' . personalwelcome_host_page() . '?page=personalwelcome" method="post">
 				<p><label for="bulkset">' . __("Set all users as personally welcomed") . '</label>
 				<input type="submit" name="bulkset" id="bulkset" class="button" value="' . __("Bulk set users") . '" /></p>
 				</form>
@@ -186,7 +202,7 @@ function personalwelcome()
 				$blogs = get_blogs_of_user($user->id);
 				echo '
 				<tr>
-					<td><a href="' . $wpmums . '-admin.php?page=personalwelcome&amp;send=' . $user->id . '">' . $user->user_login . '</a></td>
+					<td><a href="' . personalwelcome_host_page() . '?page=personalwelcome&amp;send=' . $user->id . '">' . $user->user_login . '</a></td>
 					<td>' . $user->user_nicename . '</td>
 					<td>' . $user->display_name . '</td>
 					<td><a href="mailto:' . $user->user_email . '">' . $user->user_email . '</a></td>
@@ -224,8 +240,8 @@ function personalwelcome()
 					echo'
 					<td>
 						<ul>
-							<li><a href="' . $wpmums . '-admin.php?page=personalwelcome&amp;spamuser=' . urlencode($user->user_email) . '" class="button">'.__("Spam user").'</a></li>
-							<li><a href="' . $wpmums . '-admin.php?page=personalwelcome&amp;spamuser=' . urlencode($user->user_email) . '&amp;spamblogs='.$blogids.'" class="button">'.__("Spam user and blogs").'</a></li>
+							<li><a href="' . personalwelcome_host_page() . '?page=personalwelcome&amp;spamuser=' . urlencode($user->user_email) . '" class="button">'.__("Spam user").'</a></li>
+							<li><a href="' . personalwelcome_host_page() . '?page=personalwelcome&amp;spamuser=' . urlencode($user->user_email) . '&amp;spamblogs='.$blogids.'" class="button">'.__("Spam user and blogs").'</a></li>
 						</ul>
 					</td>
 				</tr>
@@ -313,7 +329,7 @@ function personalwelcome()
 			$i = 1;
 			
 			echo '
-			<form action="' . $wpmums . '-admin.php?page=personalwelcome#templates" method="post">
+			<form action="' . personalwelcome_host_page() . '?page=personalwelcome#templates" method="post">
 			';
 		
 			foreach($templates as $template)
@@ -353,7 +369,7 @@ function personalwelcome()
 		
 		echo '
 			<h3>' . __("Add a new template") . '</h3>
-			<form action="' . $wpmums . '-admin.php?page=personalwelcome#templates" method="post">
+			<form action="' . personalwelcome_host_page() . '?page=personalwelcome#templates" method="post">
 			<p><label for="subject">' . __("Subject") . '</label>
 			<input type="text" name="subject" id="subject" value="" class="text" /></p>
 			<p><label for="message">' . __("Message") . '</label>
@@ -387,7 +403,7 @@ function personalwelcome()
 				{
 				
 					echo '
-					<form action="' . $wpmums . '-admin.php?page=personalwelcome&amp;send=' . $user->id . '" method="post">
+					<form action="' . personalwelcome_host_page() . '?page=personalwelcome&amp;send=' . $user->id . '" method="post">
 					<p>' . __("Choose a template to use") . ':</p>
 					<p><label for="templatenumber">' . __("Template") . '</label>
 					<select name="templatenumber" id="templatenumber">
@@ -414,7 +430,7 @@ function personalwelcome()
 				} else {
 				
 					echo '
-					<div class="error"><p>' . __("You do not have any templates") . '. <a href="' . $wpmums . '-admin.php?page=personalwelcome">' . __("Please add one here") . '</a>.</p></div>
+					<div class="error"><p>' . __("You do not have any templates") . '. <a href="' . personalwelcome_host_page() . '?page=personalwelcome">' . __("Please add one here") . '</a>.</p></div>
 					';
 				
 				}
@@ -435,7 +451,7 @@ function personalwelcome()
 				
 				echo '
 				<h3>Send a message</h3>
-				<form action="' . $wpmums . '-admin.php?page=personalwelcome&amp;send=' . $user->id . '" method="post">
+				<form action="' . personalwelcome_host_page() . '?page=personalwelcome&amp;send=' . $user->id . '" method="post">
 				<p><label for="subject">' . __("Subject") . '</label>
 				<input type="text" name="subject" id="subject" value="' . personalinvite_prepare($user, stripslashes($template["subject"])) . '" class="text" /></p>
 				<p><label for="message">' . __("Message") . '</label>
