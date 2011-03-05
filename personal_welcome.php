@@ -3,7 +3,7 @@
 Plugin Name: Personal Welcome
 Plugin URI: http://www.stillbreathing.co.uk/wordpress/personal-welcome/
 Description: A plugin for Wordpress/MultiSite/BuddyPress which allows you to create and send personal welcome messages to new users
-Version: 0.3.5
+Version: 0.3.6
 Author: Chris Taylor
 Author URI: http://www.stillbreathing.co.uk
 */
@@ -116,6 +116,17 @@ function personalwelcome()
 		
 		';
 		
+		if (isset($_POST["bulkset"]) && $_POST["bulkset"] != "" && isset($_POST["ids"]) && $_POST["ids"] != "")
+		{
+		
+			$i = personalinvite_set_all_as_sent($_POST["ids"]);
+			
+			echo '
+			<p>' . $i . ' ' . __("users have been set as personally welcomed") . '.</p>
+			';
+		
+		}
+		
 		$start = @$_GET["start"];
 		if ($start == ""){ $start = 0; }
 	
@@ -127,7 +138,7 @@ function personalwelcome()
 								UNIX_TIMESTAMP(u.user_registered) as user_registered, u.user_email,
 								m.meta_value as personalinvite
 								from " . $wpdb->users . " u 
-								left outer join wp_usermeta m on m.user_id = u.id and m.meta_key = 'personal_welcome_sent' 
+								left outer join " . $wpdb->usermeta . " m on m.user_id = u.id and m.meta_key = 'personal_welcome_sent' 
 								where u.display_name like '%" . $wpdb->escape(trim($_POST["personalwelcome_q"])) . "%'
 								or u.user_login like '%" . $wpdb->escape(trim($_POST["personalwelcome_q"])) . "%'
 								or u.user_email like '%" . $wpdb->escape(trim($_POST["personalwelcome_q"])) . "%'
@@ -140,9 +151,8 @@ function personalwelcome()
 			$sql = $wpdb->prepare("select u.id, u.user_login, u.user_nicename, u.display_name, 
 								UNIX_TIMESTAMP(u.user_registered) as user_registered, u.user_email 
 								from " . $wpdb->users . " u 
-								left outer join wp_usermeta m on m.user_id = u.id and m.meta_key = 'personal_welcome_sent' 
+								left outer join " . $wpdb->usermeta . " m on m.user_id = u.id and m.meta_key = 'personal_welcome_sent' 
 								where IFNULL(m.meta_value, '') = '' 
-								and u.spam = 0
 								order by u.user_registered desc limit %d, 25;", 
 								$start);
 							
@@ -152,28 +162,20 @@ function personalwelcome()
 
 		if ($users && is_array($users) && count($users) > 0)
 		{
-		
-			if (isset($_POST["bulkset"]) && $_POST["bulkset"] != "")
+
+			$ids = "";
+			foreach($users as $user)
 			{
-			
-				$i = personalinvite_set_all_as_sent();
-				
-				echo '
-				<p>' . $i . ' ' . __("users have been set as personally welcomed") . '.</p>
-				';
-			
-			} else {
-			
-				echo '
-				<form action="' . personalwelcome_host_page() . '?page=personalwelcome" method="post">
-				<p><label for="bulkset">' . __("Set all users as personally welcomed") . '</label>
-				<input type="submit" name="bulkset" id="bulkset" class="button" value="' . __("Bulk set users") . '" /></p>
-				</form>
-				';
-			
+				$ids .= $user->id.",";
 			}
 		
 			echo '
+			<form action="' . personalwelcome_host_page() . '?page=personalwelcome" method="post">
+			<p><label for="bulkset">' . __("Set all these users as personally welcomed") . '</label>
+			<input type="submit" name="bulkset" id="bulkset" class="button" value="' . __("Bulk set users") . '" />
+			<input type="hidden" name="ids" value="' . trim($ids, ",") . '" /></p>
+			</form>
+
 			<table class="widefat post fixed">
 				<thead>
 				<tr>
@@ -183,7 +185,6 @@ function personalwelcome()
 					<th>' . __("Email") . '</th>
 					<th>' . __("Blogs") . '</th>
 					<th>' . __("Date registered") . '</th>
-					<th>' . __("Spam") . '</th>
 					';
 					if (isset($_POST["personalwelcome_q"]) && trim($_POST["personalwelcome_q"]) != "")
 					{
@@ -192,6 +193,7 @@ function personalwelcome()
 						';
 					}
 					echo'
+					<th>' . __("Spam") . '</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -500,19 +502,14 @@ function personalinvite_send($user)
 }
 
 // set all users as sent
-function personalinvite_set_all_as_sent()
+function personalinvite_set_all_as_sent($ids)
 {
-	global $wpdb;
-	$sql = "select id from " . $wpdb->users . ";";
-	$setusers = $wpdb->get_results($sql);
-	$i = 0;
-	foreach($setusers as $u)
+	global $wpdb, $current_user;
+	$users = explode(",", $ids);
+	foreach($users as $user)
 	{
-		if (personalwelcome_get_user_meta($u->id, "personal_welcome_sent") == "")
-		{
-			personalwelcome_update_user_meta($u->id, "personal_welcome_sent", __("Bulk set by") . " " . $current_user->user_email . " (" . date("F j, Y, g:i a") . ")");
-			$i++;
-		}
+		personalwelcome_update_user_meta($user, "personal_welcome_sent", __("Bulk set by") . " " . $current_user->user_email . " (" . date("F j, Y, g:i a") . ")");
+		$i++;
 	}
 	return $i;
 }
@@ -527,9 +524,9 @@ function personalwelcome_get_option($name) {
 
 function personalwelcome_get_user_meta($id, $meta) {
 	if (function_exists("get_user_meta")) {
-		return get_user_meta($id, $meta);
+		return get_user_meta($id, $meta, true);
 	} else {
-		return get_usermeta($id, $meta);
+		return get_usermeta($id, $meta, true);
 	}
 }
 
