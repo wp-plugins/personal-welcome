@@ -3,7 +3,7 @@
 Plugin Name: Personal Welcome
 Plugin URI: http://www.stillbreathing.co.uk/wordpress/personal-welcome/
 Description: A plugin for Wordpress/MultiSite/BuddyPress which allows you to create and send personal welcome messages to new users
-Version: 0.3.6
+Version: 0.3.7
 Author: Chris Taylor
 Author URI: http://www.stillbreathing.co.uk
 */
