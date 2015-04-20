@@ -3,7 +3,7 @@ Contributors: mrwiblog
 Donate link: http://www.stillbreathing.co.uk/donate/
 Tags: wordpress mu, buddypress, personal, welcome, email, message, greet
 Requires at least: 2.7
-Tested up to: 3.5
+Tested up to: 4.2
 Stable tag: 0.3.7
 
 Personal Welcome is a Wordpress plugin that allows site administrators to create and send personalised welcome messages to new users.
